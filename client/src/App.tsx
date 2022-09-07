@@ -4,7 +4,7 @@ import styles from "./app.module.css"
 import LeftSide from "./components/leftSide/leftSide"
 import MiddleSide from "./components/middleSide/middleSide"
 import RightSide from "./components/rightSide/rightSide"
-
+//file
 function App() {
   return (
     <div className={styles.outerdiv}>
