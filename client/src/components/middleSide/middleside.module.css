@@ -1,0 +1,54 @@
+.outerdiv{
+    flex: 1;
+    border-right: 1px solid lightgray;
+    width: 200px;
+    height: 200px;
+    height: 100vh;
+}
+
+.chatholder{
+  padding: 20px;
+}
+
+.chat_box{
+ position: relative;
+ max-width: 200px;
+ padding: 10px;
+ width: 100%;
+}
+
+.chat_box_right{
+text-align: right;
+}
+
+.chat_box_left{
+text-align: left;
+}
+
+.textPart{
+  background-color: aqua;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+
+.profilePhoto{
+    position:absolute;
+    top: -3px;
+    padding: 5px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: 1px solid lightblue;
+}
+
+.profilePhotoRight{
+    right:-60px;
+}
+
+
+.profilePhotoLeft{
+    left: -60px;
+}
+
+

@@ -1,0 +1,21 @@
+.outerdiv{
+    flex: 1;
+    border-right: 1px solid lightgray; 
+    width: 200px;
+    height: 100vh;
+}
+
+
+.group_holder{
+    padding: 20px;
+}
+
+.group_child{
+    background-color: aqua;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 30px;
+    cursor: pointer;
+}

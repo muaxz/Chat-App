@@ -1,0 +1,7 @@
+.outerdiv{
+    flex: 1;
+    border-right: 1px solid lightgrey;
+    width: 200px;
+    height: 200px;
+    height: 100vh;
+}
