@@ -1,5 +1,6 @@
 import React,{useState,useRef} from 'react';
 import styles from "./middleside.module.css"
+import InputSection from "./inputSection"
 
 export default function MiddleSide (){
     const messages = useRef<Array<{message:string,userId:number}>>([{message:"how are you?",userId:1},{message:"I am fine what about u?",userId:2},{message:"how was your day?",userId:1}])
@@ -19,6 +20,7 @@ export default function MiddleSide (){
                     </div>
                 ))}
             </div>
+            <InputSection></InputSection>
         </div>
 
     )

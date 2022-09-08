@@ -4,6 +4,7 @@ import styles from "./app.module.css"
 import LeftSide from "./components/leftSide/leftSide"
 import MiddleSide from "./components/middleSide/middleSide"
 import RightSide from "./components/rightSide/rightSide"
+import "./app.css"
 //file
 function App() {
   return (

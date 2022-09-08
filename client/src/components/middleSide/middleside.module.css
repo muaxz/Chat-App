@@ -2,8 +2,28 @@
     flex: 1;
     border-right: 1px solid lightgray;
     width: 200px;
-    height: 200px;
     height: 100vh;
+    display: flex;
+    flex-direction:column;
+    justify-content: flex-end;
+}
+
+.input{
+    padding: 20px;
+    outline: none;
+    border:1px solid lightgray;
+    border-radius:10px;
+    width: 100%;
+}
+
+.inputsection{
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.inputholder{
+    margin: auto;
+    max-width: 500px;
 }
 
 .chatholder{
@@ -17,18 +37,40 @@
  width: 100%;
 }
 
+.chat_box::after{
+  font-family:"Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 25px;
+  content:"\f0da";
+  position: absolute;
+  color:#e1e5f2;
+  width: 10px;
+  height: 10px;
+}
+
 .chat_box_right{
-text-align: right;
+  text-align: right;
+}
+
+.chat_box_right::after{
+  right:6px;
+  top: 7px;
 }
 
 .chat_box_left{
-text-align: left;
+  text-align: left;
+}
+
+.chat_box_left::after{
+  left:5px;
+  top: 20px;
+  rotate: 180deg;
 }
 
 .textPart{
-  background-color: aqua;
+  background-color: #e1e5f2;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 
