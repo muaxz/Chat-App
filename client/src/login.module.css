@@ -1,0 +1,17 @@
+.outerdiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f8;
+}
+
+.head_title{
+    position: absolute;
+    top: 30%;
+}
+
+.input_holder{
+    max-width:400px;
+    width: 100%;
+}
