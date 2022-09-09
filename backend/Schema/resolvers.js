@@ -7,8 +7,16 @@ const MessageModel = require("../models/messages")
 
 const Resolver = {
     Query:{
-        getRoomMessages : async (parent,args,context,info)=>{
-            
+        getRooms: async ()=>{
+            try {
+
+               const rooms = await RoomModel.findAll()
+               
+               return rooms
+
+            }catch (error) {
+                //...
+            }
         }
     },
     Mutation:{
@@ -29,6 +37,7 @@ const Resolver = {
             }
         },
         createMessage : async (parent,args,context,info)=>{
+
             try {
 
                 const message = await MessageModel.create({
@@ -37,11 +46,12 @@ const Resolver = {
                     RoomId:args.RoomId
                 })
 
-            
+                
                 //context.socket.to("certain client").emit("messageOut",{message:message})
 
             } catch (error) {
                 
+                return {state:"fail"}
             }
             
         }

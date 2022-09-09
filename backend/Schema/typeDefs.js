@@ -5,15 +5,20 @@ const TypeDefs = gql`
 
     type StateResponse{
         state:String!
-    }
+    }   
     
+    type Room{
+        id:Int!
+        room_name:String!
+    }
+
     type Message { 
         id:Int!
         message:String!
     }
 
     type Query {
-        getRoomMessages : [Message!]!
+        getRooms : [Room!]!
     }
 
     type Mutation {
