@@ -27,6 +27,23 @@ const Resolver = {
                 
                 return {state:"fail"}
             }
+        },
+        createMessage : async (parent,args,context,info)=>{
+            try {
+
+                const message = await MessageModel.create({
+                    message:args.message,
+                    UserId:args.userId,
+                    RoomId:args.RoomId
+                })
+
+            
+                //context.socket.to("certain client").emit("messageOut",{message:message})
+
+            } catch (error) {
+                
+            }
+            
         }
     }
 }

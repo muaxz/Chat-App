@@ -6,13 +6,22 @@ const MessageModel = require("./models/messages")
 const {ApolloServer} = require("apollo-server-express")
 const typeDefs = require("./Schema/typeDefs")
 const resolvers = require("./Schema/resolvers")
+const cors = require("cors")
 const app = express()
+const http = require("http").Server(app)
+const io = require("socket.io")(http,{cors:{origin:"http://localhost:3000"}})
 const port = 3001
 
 
+app.use(cors({origin:"http://localhost:3000"}))
+
+io.on("connection",()=>{
+    console.log("a user connected")
+})
+
 async function startApolloServer(){
 
-  const apolloServer =  new ApolloServer({typeDefs,resolvers,csrfPrevention:true,context:({req,res})=>{return{req:req,res}}})
+  const apolloServer =  new ApolloServer({typeDefs,resolvers,csrfPrevention:true,context:({req,res})=>{return{req:req,res:res,socket:io}}})
 
   await apolloServer.start()
 
@@ -27,6 +36,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.listen(port, () => {
+http.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

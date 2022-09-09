@@ -4,6 +4,8 @@ import MiddleSide from '../components/middleSide/middleSide';
 import RightSide from '../components/rightSide/rightSide';
 import styles from "../app.module.css"
 
+
+
 export default function ChatPage (){
 
     return(
