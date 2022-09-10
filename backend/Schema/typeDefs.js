@@ -10,6 +10,7 @@ const TypeDefs = gql`
     type Room{
         id:Int!
         room_name:String!
+        room_limit:Int!
     }
 
     type Message { 
@@ -24,6 +25,7 @@ const TypeDefs = gql`
     type Mutation {
         createUser(userName:String!) : StateResponse!
         createMessage(message:String! roomId:Int! userId:String!) : StateResponse!
+        createRoom(roomName:String roomLimit:Int!) : Room!
     }
 `
 

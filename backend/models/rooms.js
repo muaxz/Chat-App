@@ -10,6 +10,9 @@ const Room = sequelize.define("room",{
     },
     room_name:{
         type:SequelizeType.STRING
+    },
+    room_limit:{
+        type:SequelizeType.INTEGER
     }
 })
 

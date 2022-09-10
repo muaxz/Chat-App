@@ -1,13 +1,27 @@
 import React, { HtmlHTMLAttributes, useState } from 'react';
 import styles from "./leftside.module.css"
+import {useQuery,useMutation} from "@apollo/client"
+import {CreateRoom} from "../../GraphQL/mutations"
 import {TextField,Button,FormControl,InputLabel,MenuItem,Select} from "@mui/material"
 
-export default function CreateRoomWindow (){
+
+type MutationRoomResponseType = {createRoom:{room_name:string,id:number,room_limit:number}}
+
+
+interface Props{
+    addNewOne:(value:MutationRoomResponseType)=>void
+}
+
+
+export default function CreateRoomWindow (props:Props){
 
     const [roomValues,setRoomValues] = useState<{roomName:string,memberLimit:number}>({
         roomName:"",
         memberLimit:1
     })
+
+
+    const [createRoom,{data,error,loading}] = useMutation<MutationRoomResponseType,{roomName:string,roomLimit:number}>(CreateRoom)
 
     const inputHandler=(e:any, field:string)=>{
      
@@ -16,8 +30,17 @@ export default function CreateRoomWindow (){
          
     }
 
-    const CreateRoom = ()=>{
-
+    const CreateRoomFunction = async ()=>{
+        
+       const newRoom = await createRoom({
+            variables:{
+                roomName:roomValues.roomName,
+                roomLimit:roomValues.memberLimit
+            }
+        })
+        
+        const roomResponse = newRoom.data as MutationRoomResponseType
+        props.addNewOne(roomResponse)
     }
 
     return(
@@ -26,7 +49,7 @@ export default function CreateRoomWindow (){
             <div className={styles.window_inner}>
                 <TextField onChange={(e)=>inputHandler(e,"roomName")} variant="filled" fullWidth style={{paddingBottom:"20px"}} label="Entere a room name..."></TextField>
                 <FormControl variant="filled" style={{paddingBottom:"40px"}} fullWidth>
-                        <InputLabel id="demo-simple-select-label">Choose Member Limit</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Choose A Member Limit</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -41,7 +64,7 @@ export default function CreateRoomWindow (){
                             }
                         </Select>
                 </FormControl>
-                <Button  onClick={CreateRoom} variant="contained">Create</Button>
+                <Button  onClick={CreateRoomFunction} variant="contained">Create</Button>
             </div>
         </div>
 

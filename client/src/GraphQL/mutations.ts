@@ -17,4 +17,14 @@ export const CreateMessage = gql`
     }
 `
 
+export const CreateRoom = gql`
+    mutation CreateRoom($roomName:String! $roomLimit:Int!){
+        createRoom(roomName:$roomName roomLimit:$roomLimit){
+            id
+            room_name
+            room_limit
+        }
+    }
+`
+
 

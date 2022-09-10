@@ -54,6 +54,22 @@ const Resolver = {
                 return {state:"fail"}
             }
             
+        },
+        async createRoom(parent,args,context,info){
+            console.log("inside room")
+            try {
+                
+                const Room = await RoomModel.create({
+                    room_name:args.roomName,
+                    room_limit:args.roomLimit
+                })
+
+                return Room
+
+            } catch (error) {
+                ////
+            }
+
         }
     }
 }
