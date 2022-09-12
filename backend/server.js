@@ -15,8 +15,11 @@ const port = 3001
 
 app.use(cors({origin:"http://localhost:3000"}))
 
-io.on("connection",()=>{
-    console.log("a user connected")
+io.on("connection",(socket)=>{
+    socket.on("joinRoom",(roomId)=>{
+       console.log("in here join")
+       socket.join(roomId)
+    }) 
 })
 
 async function startApolloServer(){

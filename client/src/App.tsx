@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import LeftSide from "./components/leftSide/leftSide"
 import MiddleSide from "./components/middleSide/middleSide"
@@ -8,6 +8,7 @@ import {ApolloClient,ApolloProvider,HttpLink,DefaultOptions,from,InMemoryCache} 
 import {onError} from "@apollo/client/link/error"
 import LoginPage from "./pages/login"
 import ChatPage from "./pages/chat"
+
 import "./app.css"
 //file
 
@@ -40,7 +41,15 @@ defaultOptions:defaultOptions
 })
 
 
+
 function App() {
+
+  useEffect(()=>{
+      
+  },[])
+
+ 
+  
   return (
     <BrowserRouter>
       <ApolloProvider client={client}>

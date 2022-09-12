@@ -1,10 +1,19 @@
-import React,{useRef} from 'react';
+import React,{useRef,useContext, useEffect} from 'react';
 import styles from "./rightside.module.css"
+import {UserContext} from "../../context/user-login-context"
 
 export default function RightSide(){
-
+    const {socket} = useContext(UserContext)
     const memberList = useRef<Array<{image:string,fullName:string}>>([{image:"./lecrec.png",fullName:"Lecrec"},{image:"./nadal.jpg",fullName:"Nadal"},{image:"./user.jpg",fullName:"Joe"},{image:"./me.jpg",fullName:"Emre Ozer"}])
     
+    useEffect(()=>{
+
+        socket.on("newMember",(member:any)=>{
+            console.log(member)
+        })
+
+    },[socket])
+
     return(
         <div className={styles.outerdiv}>
             <div className={styles.innerdiv}>

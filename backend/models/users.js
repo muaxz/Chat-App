@@ -1,5 +1,6 @@
 const sequelize = require("../DataBase")
 const SequelizeType = require("sequelize")
+const Room = require("./rooms")
 const {v4} = require("uuid")
 
 
@@ -17,5 +18,7 @@ const User = sequelize.define("user",{
     }
 })
 
+User.belongsTo(Room)
+Room.hasMany(User)
 
 module.exports = User;

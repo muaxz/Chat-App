@@ -1,5 +1,7 @@
 const sequelize = require("../DataBase")
 const SequelizeType = require("sequelize")
+const RoomModel = require("./rooms")
+const UserModel = require("./users")
 
 
 const Message = sequelize.define("message",{
@@ -13,5 +15,8 @@ const Message = sequelize.define("message",{
     }
 })
 
+Message.belongsTo(RoomModel)
+RoomModel.hasMany(Message)
+Message.belongsTo(UserModel)
 
 module.exports = Message;

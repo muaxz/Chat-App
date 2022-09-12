@@ -17,19 +17,61 @@ const Resolver = {
             }catch (error) {
                 //...
             }
+        },
+        async getRoomMessages(parent,args,context,info){
+
+            try {
+
+                const Messages = await RoomModel.findOne({
+                    where:{
+                        id:args.roomId,
+                    },
+                    include:[{
+                        model:MessageModel,
+                        include:{
+                            model:UserModel
+                        }
+                    },{
+                        model:UserModel
+                    }],
+                })
+
+                return Messages.toJSON();
+
+            } catch (error) {
+                //....
+            }
+        },
+        async getCurrentUser(parent,args,context,info){
+
+            try {
+                
+                const currentUser = UserModel.findOne({
+                    where:{
+                        id:args.userId
+                    }
+                })
+
+                return currentUser;
+
+            } catch (error) {
+                //...
+            }
+
         }
     },
     Mutation:{
         createUser : async (parent,args,context,info)=>{
             try {
-
+                
+                const randomGeneratedUserId = v4()
                 await UserModel.create({
-                    id:v4(),
+                    id:randomGeneratedUserId,
                     user_name:args.userName,
                     profile_url:""
                 })
-
-                return {state:"success"}
+                
+                return {state:"success",UserToken:randomGeneratedUserId}
 
             } catch (error) {
                 
@@ -37,18 +79,20 @@ const Resolver = {
             }
         },
         createMessage : async (parent,args,context,info)=>{
-
+            console.log("inside")
             try {
 
                 const message = await MessageModel.create({
                     message:args.message,
-                    UserId:args.userId,
-                    RoomId:args.RoomId
+                    userId:args.userId,
+                    roomId:args.roomId
                 })
 
                 
-                //context.socket.to("certain client").emit("messageOut",{message:message})
+                context.socket.to("").emit("messageOut",{message:message})
 
+
+                return {state:"success"}
             } catch (error) {
                 
                 return {state:"fail"}
@@ -68,6 +112,39 @@ const Resolver = {
 
             } catch (error) {
                 ////
+            }
+
+        },
+        async joinRoom(parent,args,context,info){
+
+            try {
+
+                const currentRoom = await RoomModel.findOne({
+                    where:{
+                        id:args.roomId
+                    },
+                    include:{
+                        model:UserModel
+                    }
+                })
+               
+                if(currentRoom.room_limit > currentRoom.users.length){
+                     console.log("inside lol")
+                     const currentUser = await UserModel.findOne({where:{id:args.userId}})
+                     await currentUser.update({roomId:args.roomId})
+                     context.socket.to(args.roomId).emit("newMember",currentUser.toJSON())
+                     return {state:"success"}
+                }
+                
+                //const user = await UserModel.update({roomId:args.roomId},{where:{id:args.userId}})
+                //console.log(user)
+
+                //context.socket.to("ceratin_client").emit("newMember",{})
+
+            } catch (error) {
+
+                    return {state:"fail"}
+
             }
 
         }

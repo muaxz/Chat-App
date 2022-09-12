@@ -4,18 +4,25 @@ import {TextField,Button} from "@mui/material"
 import {ArrowForwardIos} from "@mui/icons-material"
 import {useQuery,useMutation} from "@apollo/client"
 import {CreateUser} from "../GraphQL/mutations"
-import {useNavigate} from "react-router-dom"
+import {useNavigate,Navigate} from "react-router-dom"
 
 
 export default function LoginPage(){
 
+    
+
     const [nameValue,setNameValue] = useState<{name:string,error:boolean}>({name:"",error:false})
-    const [createUser,{data,error,loading}] = useMutation(CreateUser)
+    const [createUser,{data,error,loading}] = useMutation<{createUser:{state:string,UserToken:string}},any>(CreateUser)
     const  navigate = useNavigate()
+
+    if(localStorage.getItem("userId")){
+        return <Navigate to={-1}></Navigate>
+    }
 
     if(error){
         console.log("error occured")
     }
+
 
     async function SubmitLogin(){
 
@@ -25,7 +32,10 @@ export default function LoginPage(){
     
         await createUser({variables:{
             userName:nameValue.name
-        }})
+        }}).then((res)=>{
+    
+            localStorage.setItem("userId",res.data?.createUser.UserToken!)
+        })
 
         navigate("/chat")
         

@@ -7,26 +7,32 @@ import { useMutation } from '@apollo/client';
 import {CreateMessage} from "../../GraphQL/mutations"
 
 
-export default function InputSection (){
+interface Props{
+    setMessages:React.Dispatch<React.SetStateAction<any[]>>
+}
+
+export default function InputSection (props:Props){
 
     const [message,setMessage] = useState<string>("")
     const [searchParams,setSearchParams] = useSearchParams()
     var roomId = searchParams.get("roomId")!
-    const [createMessage,{data,loading,error}] = useMutation<any,{RoomId:number,message:string,UserId:string}>(CreateMessage)
-    const UserId = localStorage.getItem("userid")!
+    const [createMessage,{data,loading,error}] = useMutation<any,{roomId:number,message:string,userId:string}>(CreateMessage)
+    const UserId = localStorage.getItem("userId")!
 
     if(error){
         console.log(error)
     }
 
-    const SubmitMessage = ()=>{
-        createMessage({
+    const SubmitMessage = async ()=>{
+        const messageResponse = await createMessage({
             variables:{
-                RoomId:parseInt(roomId),
+                roomId:parseInt(roomId),
                 message:message,
-                UserId:UserId,
+                userId:UserId,
             }
         })
+        console.log(messageResponse)
+        //props.setMessages(prev=>([...prev,messageResponse.data.createMessage]))
     }
 
     return(
