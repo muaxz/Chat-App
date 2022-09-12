@@ -8,6 +8,7 @@ import {ApolloClient,ApolloProvider,HttpLink,DefaultOptions,from,InMemoryCache} 
 import {onError} from "@apollo/client/link/error"
 import LoginPage from "./pages/login"
 import ChatPage from "./pages/chat"
+import UserStateProvider from "./context/user-state-context"
 
 import "./app.css"
 //file
@@ -53,10 +54,12 @@ function App() {
   return (
     <BrowserRouter>
       <ApolloProvider client={client}>
+        <UserStateProvider>
           <Routes>
              <Route path="/" element={<LoginPage/>}></Route>
              <Route path="/chat" element={<ChatPage/>}></Route>
           </Routes>
+        </UserStateProvider>
       </ApolloProvider>
     </BrowserRouter>
   );

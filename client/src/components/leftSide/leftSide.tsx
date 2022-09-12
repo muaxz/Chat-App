@@ -6,13 +6,13 @@ import {GetAllRooms} from "../../GraphQL/queries"
 import {JoinRoom} from "../../GraphQL/mutations"
 import AddIcon from "@mui/icons-material/Add"
 import CreateRoomWindow from "./createRoomWindow"
-import {UserContext} from "../../context/user-login-context"
+import {UserContext} from "../../context/user-state-context"
 
 
 export default function LeftSide(){
     
     const {data,loading,error} = useQuery(GetAllRooms)
-    const {setisUserInRoom,socket} = useContext(UserContext)
+    const {setisUserInRoom,socket,setCurrentUserRoom,currentUserRoom} = useContext(UserContext)
     const navigate = useNavigate()
     const [joinRoom,{data:joinData,loading:joinLoading,error:joinError}] = useMutation(JoinRoom)
     const [rooms,setRooms] = useState<{room_name:string,room_limit:number,id:number}[]>([])
@@ -23,8 +23,11 @@ export default function LeftSide(){
     }   
 
     useEffect(()=>{
-        if(data)
-        setRooms(data.getRooms)
+
+        if(data){
+            setRooms(data.getRooms)
+        }
+
     },[data])
 
     const addNewOne=(roomObject:any)=>{
@@ -34,19 +37,25 @@ export default function LeftSide(){
     
     const joinRoomHandler=(roomId:number)=>{
          
-         joinRoom({
-            variables:{
-                roomId:roomId,
-                userId:localStorage.getItem("userId")
-            }
-         }).then((res)=>{
-            console.log(res.data)
-             if(res.data.joinRoom.state !== "full"){
-                 navigate(`/chat?roomId=${roomId}`)
-                 setisUserInRoom(true)
-                 socket.emit("joinRoom",roomId)
-             }
-         })
+         if(currentUserRoom !== roomId){
+
+            joinRoom({
+                variables:{
+                    roomId:roomId,
+                    userId:localStorage.getItem("userId")
+                }
+             }).then((res)=>{
+    
+                 if(res.data.joinRoom.state !== "full"){
+                     //navigate(`/chat?roomId=${roomId}`)
+                     socket.emit("joinRoom",roomId)
+                     setisUserInRoom(true)
+                     setCurrentUserRoom(roomId)
+                 }
+             })
+             
+         }
+        
     }
     
     return(
@@ -60,7 +69,7 @@ export default function LeftSide(){
                {rooms.map((item,index)=>(
                    <div onClick={()=>joinRoomHandler(item.id)}  key={index} className={styles.group_child}>
                         <div>{item.room_name}</div>
-                        <div>(1/4)</div>
+                        <div>(1/{item.room_limit})</div>
                     </div>
                ))}
            </div>

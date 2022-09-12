@@ -6,6 +6,7 @@ export const GetAllRooms = gql`
         getRooms{
             id
             room_name
+            room_limit
         }
     }
 
@@ -13,7 +14,7 @@ export const GetAllRooms = gql`
 
 
 export const GetRoomMessages = gql`
-    query GetRoomMessages($roomId:String!){
+    query GetRoomMessages($roomId:Int!){
         getRoomMessages(roomId:$roomId){
            room_name
            room_limit
@@ -36,10 +37,10 @@ export const GetRoomMessages = gql`
 `
 
 export const GetCurrentUser = gql`
-    query GetCurrentUser{
-        getCurrentUser{
-            user_name
+    query GetCurrentUser($userId:String!){
+        getCurrentUser(userId:$userId){
             id
+            user_name
         }
     }
 `

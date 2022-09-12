@@ -51,7 +51,7 @@ const Resolver = {
                         id:args.userId
                     }
                 })
-
+                console.log(currentUser)
                 return currentUser;
 
             } catch (error) {
@@ -129,10 +129,10 @@ const Resolver = {
                 })
                
                 if(currentRoom.room_limit > currentRoom.users.length){
-                     console.log("inside lol")
+            
                      const currentUser = await UserModel.findOne({where:{id:args.userId}})
                      await currentUser.update({roomId:args.roomId})
-                     context.socket.to(args.roomId).emit("newMember",currentUser.toJSON())
+                     context.socket.to(args.roomId).emit("newMember",{user:currentUser.toJSON(),nextRoomId:args.roomId})
                      return {state:"success"}
                 }
                 

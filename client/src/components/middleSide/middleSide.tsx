@@ -31,7 +31,7 @@ export default function MiddleSide(props:Props){
         <div className={styles.outerdiv}>
             <div className={styles.chatholder}>
                 {props.messageList.map((item,index:number)=>(
-                    <div key={index} style={{display:"flex",flexDirection:item.user.id === CurrentUserId ? "row-reverse" : "row",marginBottom:"10px",paddingRight:"50px",paddingLeft:"50px"}}>
+                    <div key={index} style={{display:"flex",flexDirection:item.user.id === CurrentUserId ? "row-reverse" : "row",marginBottom:"30px",paddingRight:"50px",paddingLeft:"50px"}}>
                         <div className={`${item.user.id === CurrentUserId ? styles.chat_box_right : styles.chat_box_left} ${styles.chat_box}`}>
                             <div className={`${item.user.id === CurrentUserId ? styles.profilePhotoRight : styles.profilePhotoLeft} ${styles.profilePhoto}`}>
                                 <img  style={{width:"100%",objectFit:"cover"}} src="/logo192.png" alt="" />

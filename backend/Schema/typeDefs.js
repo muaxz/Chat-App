@@ -31,8 +31,8 @@ const TypeDefs = gql`
 
     type Query {
         getRooms : [Room!]!
-        getRoomMessages(roomId:String!) : Room!
-        getCurrentUser : User!
+        getRoomMessages(roomId:Int!) : Room!
+        getCurrentUser(userId:String!) : User!
     }
 
     type Mutation {

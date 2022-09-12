@@ -17,8 +17,7 @@ app.use(cors({origin:"http://localhost:3000"}))
 
 io.on("connection",(socket)=>{
     socket.on("joinRoom",(roomId)=>{
-       console.log("in here join")
-       socket.join(roomId)
+       socket.join(roomId.toString())
     }) 
 })
 

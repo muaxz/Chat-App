@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styles from "./middleside.module.css"
 import SendIcon from "@mui/icons-material/Send"
 import {TextField,InputAdornment,Button} from "@mui/material"
 import {useSearchParams} from "react-router-dom"
 import { useMutation } from '@apollo/client';
 import {CreateMessage} from "../../GraphQL/mutations"
+import {UserContext} from "../../context/user-state-context"
 
 
 interface Props{
@@ -15,7 +16,7 @@ export default function InputSection (props:Props){
 
     const [message,setMessage] = useState<string>("")
     const [searchParams,setSearchParams] = useSearchParams()
-    var roomId = searchParams.get("roomId")!
+    const {currentUserRoom} = useContext(UserContext)
     const [createMessage,{data,loading,error}] = useMutation<any,{roomId:number,message:string,userId:string}>(CreateMessage)
     const UserId = localStorage.getItem("userId")!
 
@@ -26,7 +27,7 @@ export default function InputSection (props:Props){
     const SubmitMessage = async ()=>{
         const messageResponse = await createMessage({
             variables:{
-                roomId:parseInt(roomId),
+                roomId:currentUserRoom,
                 message:message,
                 userId:UserId,
             }

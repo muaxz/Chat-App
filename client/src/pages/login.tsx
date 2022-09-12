@@ -8,15 +8,12 @@ import {useNavigate,Navigate} from "react-router-dom"
 
 
 export default function LoginPage(){
-
-    
-
     const [nameValue,setNameValue] = useState<{name:string,error:boolean}>({name:"",error:false})
     const [createUser,{data,error,loading}] = useMutation<{createUser:{state:string,UserToken:string}},any>(CreateUser)
     const  navigate = useNavigate()
 
     if(localStorage.getItem("userId")){
-        return <Navigate to={-1}></Navigate>
+        return <Navigate to={"/chat"}></Navigate>
     }
 
     if(error){

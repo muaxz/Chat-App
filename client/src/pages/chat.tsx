@@ -6,17 +6,17 @@ import styles from "../app.module.css"
 import {useLazyQuery} from "@apollo/client"
 import {GetRoomMessages} from "../GraphQL/queries"
 import {useSearchParams} from "react-router-dom"
-import {UserContext} from "../context/user-login-context"
+import {UserContext} from "../context/user-state-context"
 
 
 
 export default function ChatPage (){
-    const {isUserInRoom} = useContext(UserContext)
+    const {isUserInRoom,currentUserRoom} = useContext(UserContext)
     const [getParam,setParam] = useSearchParams()
     const roomId = getParam.get("roomId")
-    const [getRoomMessages,{data,loading,error}] = useLazyQuery(GetRoomMessages,{variables:{roomId:getParam.get("roomId")}})
+    const [getRoomMessages,{data,loading,error}] = useLazyQuery(GetRoomMessages)
     const [Messages,setMessages] = useState<any[]>([])
-
+    
     useEffect(()=>{
 
         if(data){
@@ -26,16 +26,16 @@ export default function ChatPage (){
     },[data])
 
     useEffect(()=>{
-
-       if(roomId){
+        console.log(currentUserRoom)
+       if(currentUserRoom !== 0){
          getRoomMessages({
             variables:{
-                roomId:roomId
+                roomId:currentUserRoom
             }
          })
        }
 
-    },[roomId])
+    },[currentUserRoom])
 
     if(error){
         console.log(error)
@@ -47,12 +47,11 @@ export default function ChatPage (){
             <div className={styles.innerdiv}>
                 <LeftSide></LeftSide>
                 {   
-                    isUserInRoom ?
-                    <React.Fragment>
+                    isUserInRoom &&
+                    (<React.Fragment>
                         <MiddleSide setMessages={setMessages} messageList={Messages}></MiddleSide>
-                        <RightSide></RightSide>
-                    </React.Fragment>
-                    : ""
+                        <RightSide  memberList={data ? data.getRoomMessages.users : []}></RightSide>
+                    </React.Fragment>)
                 }
             </div>
         </div>
