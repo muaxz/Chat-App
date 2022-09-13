@@ -48,6 +48,9 @@ export default function LeftSide(){
     
                  if(res.data.joinRoom.state !== "full"){
                      //navigate(`/chat?roomId=${roomId}`)
+                     if(currentUserRoom !== 0){
+                        socket.emit("leaveRoom",currentUserRoom)
+                     }
                      socket.emit("joinRoom",roomId)
                      setisUserInRoom(true)
                      setCurrentUserRoom(roomId)
@@ -67,7 +70,7 @@ export default function LeftSide(){
            <div onClick={()=>setIsWindowActive(true)} style={{marginTop:"20px",width:"25px",height:"25px",backgroundColor:"lightgrey",borderRadius:"50%",display:"flex",justifyContent:"center",alignItems:"center",marginLeft:"auto",marginRight:"20px",cursor:"pointer"}}><AddIcon style={{color:"white"}}></AddIcon></div>
            <div className={styles.group_holder}>
                {rooms.map((item,index)=>(
-                   <div onClick={()=>joinRoomHandler(item.id)}  key={index} className={styles.group_child}>
+                   <div onClick={()=>joinRoomHandler(item.id)}  key={index} className={currentUserRoom !== item.id ? styles.group_child : `${styles.group_child} ${styles.selected}`}>
                         <div>{item.room_name}</div>
                         <div>(1/{item.room_limit})</div>
                     </div>

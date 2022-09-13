@@ -11,7 +11,7 @@
 }
 
 .group_child{
-    background-color: #ff477e;
+    background-color: #52b69a;
     display: flex;
     color:white;
     justify-content: space-between;
@@ -19,13 +19,21 @@
     border-radius: 5px;
     padding: 30px;
     cursor: pointer;
+    font-size: 20px;
 }
 
+
+.selected{
+    color: #ff477e;
+    background-color:  #fae0e4;
+}
 
 .group_child:hover{
     color: #ff477e;
     background-color: #fae0e4;
 }
+
+
 
 .window_outer{
     position: absolute;

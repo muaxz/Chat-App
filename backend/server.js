@@ -16,9 +16,23 @@ const port = 3001
 app.use(cors({origin:"http://localhost:3000"}))
 
 io.on("connection",(socket)=>{
+    
+    socket.on("connected",(userId)=>{
+       socket["userId"] = userId
+    })
+
     socket.on("joinRoom",(roomId)=>{
        socket.join(roomId.toString())
     }) 
+
+    socket.on("leaveRoom",(roomId)=>{
+      socket.leave(roomId.toString())
+    })
+
+    socket.on("disconnecting",async ()=>{
+        UserModel.update({roomId:null},{where:{id:socket.userId}})
+    })
+ 
 })
 
 async function startApolloServer(){

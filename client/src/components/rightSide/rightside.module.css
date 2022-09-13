@@ -1,14 +1,23 @@
 .outerdiv{
+    position: relative;
     flex: 1;
     border-right: 1px solid lightgrey;
     width: 200px;
     height: 200px;
     height: 100vh;
-    padding: 20px;
+    padding-top: 20px;
 }
 
-.outerdiv{
-    
+.outerdiv.close{
+  position: fixed;
+  right: 0px;
+  width: 100px;
+  height: 100vh;
+  background-color: red;
+}
+
+.innerdiv{
+
 }
 
 .memberchild{ 
@@ -22,4 +31,10 @@
     width: 60px;
     height: 60px;
     border: 1px solid lightblue;
+}
+
+.leaveButton{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }

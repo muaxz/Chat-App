@@ -11,7 +11,7 @@ import {UserContext} from "../context/user-state-context"
 
 
 export default function ChatPage (){
-    const {isUserInRoom,currentUserRoom} = useContext(UserContext)
+    const {isUserInRoom,currentUserRoom,socket} = useContext(UserContext)
     const [getParam,setParam] = useSearchParams()
     const roomId = getParam.get("roomId")
     const [getRoomMessages,{data,loading,error}] = useLazyQuery(GetRoomMessages)
@@ -36,6 +36,14 @@ export default function ChatPage (){
        }
 
     },[currentUserRoom])
+
+    useEffect(()=>{
+
+        socket.on("newMessage",(message:any)=>{
+            setMessages(prev=>([...prev,message.message]))
+        })
+
+    },[])
 
     if(error){
         console.log(error)

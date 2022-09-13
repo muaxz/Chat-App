@@ -1,4 +1,4 @@
-import React,{createContext, useEffect, useState} from 'react';
+import React,{createContext, useEffect, useRef, useState} from 'react';
 import {useQuery} from "@apollo/client"
 import {GetCurrentUser} from "../GraphQL/queries"
 import {io} from "socket.io-client"
@@ -25,9 +25,13 @@ export default function UserLoginContext(props:Props){
 
     useEffect(()=>{
 
+        socket.on("connect",()=>{
+            console.log("connected")
+        })
+
         if(data){
-            console.log(data)
             setUserState(data.getCurrentUser)
+            socket.emit("connected",data.getCurrentUser.id)
         }   
 
     },[data])

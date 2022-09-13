@@ -25,6 +25,11 @@ export default function InputSection (props:Props){
     }
 
     const SubmitMessage = async ()=>{
+
+        setMessage("")
+
+        if(message === "") return;
+         
         const messageResponse = await createMessage({
             variables:{
                 roomId:currentUserRoom,
@@ -32,7 +37,7 @@ export default function InputSection (props:Props){
                 userId:UserId,
             }
         })
-        console.log(messageResponse)
+
         //props.setMessages(prev=>([...prev,messageResponse.data.createMessage]))
     }
 

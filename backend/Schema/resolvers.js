@@ -51,7 +51,7 @@ const Resolver = {
                         id:args.userId
                     }
                 })
-                console.log(currentUser)
+              
                 return currentUser;
 
             } catch (error) {
@@ -79,20 +79,30 @@ const Resolver = {
             }
         },
         createMessage : async (parent,args,context,info)=>{
-            console.log("inside")
+          
             try {
 
-                const message = await MessageModel.create({
+                const newMessage = await MessageModel.create({
                     message:args.message,
                     userId:args.userId,
                     roomId:args.roomId
                 })
 
-                
-                context.socket.to("").emit("messageOut",{message:message})
+                const user = await UserModel.findOne({
+                    where:{
+                        id:args.userId
+                    },
+                    attributes:["id","user_name","profile_url"]
+                })
+
+                const realMessage = newMessage.toJSON()
+                realMessage.user = user;
+
+                context.socket.to(args.roomId.toString()).emit("newMessage",{message:realMessage})
 
 
                 return {state:"success"}
+
             } catch (error) {
                 
                 return {state:"fail"}
@@ -132,7 +142,7 @@ const Resolver = {
             
                      const currentUser = await UserModel.findOne({where:{id:args.userId}})
                      await currentUser.update({roomId:args.roomId})
-                     context.socket.to(args.roomId).emit("newMember",{user:currentUser.toJSON(),nextRoomId:args.roomId})
+                     context.socket.to(args.roomId.toString()).emit("newMember",{user:currentUser.toJSON(),nextRoomId:args.roomId})
                      return {state:"success"}
                 }
                 
