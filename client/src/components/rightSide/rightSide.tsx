@@ -11,38 +11,46 @@ interface Props{
 
 export default function RightSide(props:Props){
     const {socket,currentUserRoom,userState,setisUserInRoom,setCurrentUserRoom} = useContext(UserContext)
-    const [memberList,setMemberList] = useState<Array<{user_name:string,id:number,profile_url:string}>>([])
+    const [memberList,setMemberList] = useState<any[]>([])
     const allowExecute = useRef<boolean>(true)
+    const memberListRef = useRef<Array<{user_name:string,id:string,profile_url:string}>>([])
     
     useEffect(()=>{
-
-        socket.on("newMember",(member:any)=>{
-            
-            if(currentUserRoom !== member.roomId){
-                setMemberList(prev=>([...prev,member.user]))
-            }
-
+      
+        socket.on("newMember",(member:any)=>{ 
+            console.log("in member")
+            setMemberList([...memberListRef.current,member.user])
+            memberListRef.current = [...memberListRef.current,member.user]
         })
 
-    },[socket])
+        socket.on("outMember",({userId,roomId}:{userId:string,roomId:number})=>{
+                //console.log(memberListRef.current)
+                console.log("in out")
+                const outUserIndex = memberListRef.current.findIndex((item)=>item.id === userId)
+                memberListRef.current.splice(outUserIndex,1)
+                setMemberList([...memberListRef.current])
+        })
+
+    },[])
 
     useEffect(()=>{
 
       setMemberList(props.memberList)
+      memberListRef.current = props.memberList
       
     },[props.memberList])
 
     useEffect(()=>{
         
-        if(currentUserRoom !== 0 && allowExecute.current){
+        if(currentUserRoom !== 0){
             setMemberList(prev=>([...prev,userState]))
             allowExecute.current = false;
         }
         
-    },[currentUserRoom])
+    },[])
     
     const leaveRoomHandler = ()=>{
-        socket.emit("leaveRoom",currentUserRoom)
+        socket.emit("leaveRoom",{currentUserRoom,userId:userState.id})
         setisUserInRoom(false)
         setCurrentUserRoom(0)
     }
@@ -56,7 +64,7 @@ export default function RightSide(props:Props){
                     {memberList.map((member,index)=>(
                         <div key={index} className={styles.memberchild}>
                             <div className={styles.profilePhoto}>
-                                <img style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}} src={member.profile_url} alt="" />
+                                <img style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"50%"}} src={member.profile_url === "" ? "/user.jpg" : member.profile_url} alt="" />
                             </div>
                             <div style={{paddingLeft:"20px",fontSize:"20px"}}>
                                 {userState.id === member.id ? "You" : member.user_name}

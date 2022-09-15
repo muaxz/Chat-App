@@ -3,11 +3,12 @@
     border-right: 1px solid lightgray; 
     width: 200px;
     height: 100vh;
+    padding: 20px;
 }
 
 
 .group_holder{
-    padding: 20px;
+    padding-top: 20px;
 }
 
 .group_child{
@@ -33,6 +34,12 @@
     background-color: #fae0e4;
 }
 
+.profilePhoto{
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: 1px solid lightblue;
+}
 
 
 .window_outer{

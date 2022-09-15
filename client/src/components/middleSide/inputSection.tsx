@@ -16,7 +16,7 @@ export default function InputSection (props:Props){
 
     const [message,setMessage] = useState<string>("")
     const [searchParams,setSearchParams] = useSearchParams()
-    const {currentUserRoom} = useContext(UserContext)
+    const {currentUserRoom,userState:{id}} = useContext(UserContext)
     const [createMessage,{data,loading,error}] = useMutation<any,{roomId:number,message:string,userId:string}>(CreateMessage)
     const UserId = localStorage.getItem("userId")!
 
@@ -29,16 +29,15 @@ export default function InputSection (props:Props){
         setMessage("")
 
         if(message === "") return;
-         
-        const messageResponse = await createMessage({
+
+        createMessage({
             variables:{
                 roomId:currentUserRoom,
                 message:message,
-                userId:UserId,
+                userId:id,
             }
         })
 
-        //props.setMessages(prev=>([...prev,messageResponse.data.createMessage]))
     }
 
     return(

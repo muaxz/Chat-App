@@ -17,22 +17,42 @@ app.use(cors({origin:"http://localhost:3000"}))
 
 io.on("connection",(socket)=>{
     
-    socket.on("connected",(userId)=>{
-       socket["userId"] = userId
-    })
-
-    socket.on("joinRoom",(roomId)=>{
+    socket.on("connected",({userId,roomId})=>{
+       socket[socket.id] = userId
+       if(roomId)
        socket.join(roomId.toString())
+    })
+    
+    socket.on("joinRoom",({userState,roomId,currentUserRoom})=>{
+        
+     
+       if(currentUserRoom === 0){
+
+          socket.join(roomId.toString())
+          socket.broadcast.emit("roomNumberUp",roomId)
+          io.to(roomId.toString()).emit("newMember",{user:userState,roomId:roomId})
+
+       }else{
+
+          socket.join(roomId.toString())
+          socket.to(currentUserRoom.toString()).emit("outMember",{userId:userState.id})
+          io.to(roomId.toString()).emit("newMember",{user:userState,roomId:roomId})
+          socket.broadcast.emit("roomNumberUp",roomId)
+          socket.broadcast.emit("roomNumberDown",currentUserRoom)
+          socket.leave(currentUserRoom.toString())
+
+       }
+
     }) 
 
-    socket.on("leaveRoom",(roomId)=>{
-      socket.leave(roomId.toString())
+    socket.on("leaveRoom",({currentUserRoom,userId})=>{
+      io.emit("roomNumberDown",currentUserRoom)
+      socket.to(currentUserRoom.toString()).emit("outMember",{userId:userId})
+      socket.leave(currentUserRoom.toString())
+      UserModel.update({roomId:null},{where:{id:userId}})
     })
 
-    socket.on("disconnecting",async ()=>{
-        UserModel.update({roomId:null},{where:{id:socket.userId}})
-    })
- 
+
 })
 
 async function startApolloServer(){

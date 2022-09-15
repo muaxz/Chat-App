@@ -28,6 +28,20 @@
 
 .chatholder{
   padding: 20px;
+  overflow: auto;
+}
+
+::-webkit-scrollbar{
+  width: 12px;
+  color: red;
+}
+
+::-webkit-scrollbar-track{
+
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: lightgrey;
 }
 
 .chat_box{

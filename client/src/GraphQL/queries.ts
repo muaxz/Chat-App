@@ -7,6 +7,7 @@ export const GetAllRooms = gql`
             id
             room_name
             room_limit
+            MemberCount
         }
     }
 
@@ -41,6 +42,8 @@ export const GetCurrentUser = gql`
         getCurrentUser(userId:$userId){
             id
             user_name
+            profile_url
+            roomId
         }
     }
 `

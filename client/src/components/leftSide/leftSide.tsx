@@ -1,4 +1,4 @@
-import React, { useEffect, useState ,useContext} from 'react';
+import React, { useEffect, useState ,useContext, useRef} from 'react';
 import styles from "./leftside.module.css"
 import {useSearchParams,Link,useNavigate} from "react-router-dom"
 import {useMutation, useQuery} from "@apollo/client"
@@ -6,28 +6,48 @@ import {GetAllRooms} from "../../GraphQL/queries"
 import {JoinRoom} from "../../GraphQL/mutations"
 import AddIcon from "@mui/icons-material/Add"
 import CreateRoomWindow from "./createRoomWindow"
+import {Button} from "@mui/material"
 import {UserContext} from "../../context/user-state-context"
 
 
 export default function LeftSide(){
     
     const {data,loading,error} = useQuery(GetAllRooms)
-    const {setisUserInRoom,socket,setCurrentUserRoom,currentUserRoom} = useContext(UserContext)
+    const {setisUserInRoom,setCurrentUserRoom,currentUserRoom,userState,socket,setUserState} = useContext(UserContext)
     const navigate = useNavigate()
+    const listRef = useRef<{room_name:string,room_limit:number,id:number,MemberCount:number}[]>([])
     const [joinRoom,{data:joinData,loading:joinLoading,error:joinError}] = useMutation(JoinRoom)
-    const [rooms,setRooms] = useState<{room_name:string,room_limit:number,id:number}[]>([])
+    const [rooms,setRooms] = useState<{room_name:string,room_limit:number,id:number,MemberCount:number}[]>([])
     const [isWindowActive,setIsWindowActive] = useState<boolean>(false)
     
     if(error){
         console.log(error)
     }   
-
+   
     useEffect(()=>{
 
         if(data){
             setRooms(data.getRooms)
+            listRef.current = data.getRooms
         }
 
+    },[data])
+
+    useEffect(()=>{
+        const copyRooms = listRef.current
+        if(data){
+            socket.on("roomNumberUp",(roomId:number)=>{
+                const roomIndex = copyRooms.findIndex((item)=>item.id === roomId)
+                copyRooms[roomIndex].MemberCount = copyRooms[roomIndex].MemberCount + 1
+                setRooms([...copyRooms])
+            })
+
+            socket.on("roomNumberDown",(roomId:number)=>{
+                const roomIndex = copyRooms.findIndex((item)=>item.id === roomId)
+                copyRooms[roomIndex].MemberCount = copyRooms[roomIndex].MemberCount + -1
+                setRooms([...copyRooms])
+            })
+        }
     },[data])
 
     const addNewOne=(roomObject:any)=>{
@@ -35,30 +55,50 @@ export default function LeftSide(){
         setRooms(prev=>([...prev,roomObject.createRoom]))
     }
     
-    const joinRoomHandler=(roomId:number)=>{
+    const joinRoomHandler=(roomId:number,index:number)=>{
          
          if(currentUserRoom !== roomId){
-
+            const copyRooms = [...rooms]
             joinRoom({
                 variables:{
                     roomId:roomId,
-                    userId:localStorage.getItem("userId")
+                    userId:userState.id
                 }
              }).then((res)=>{
-    
+                 console.log(res.data.joinRoom.state)
                  if(res.data.joinRoom.state !== "full"){
                      //navigate(`/chat?roomId=${roomId}`)
                      if(currentUserRoom !== 0){
-                        socket.emit("leaveRoom",currentUserRoom)
+                        const roomIndex = copyRooms.findIndex((item)=>item.id === currentUserRoom)
+                        copyRooms[roomIndex].MemberCount -=1
                      }
-                     socket.emit("joinRoom",roomId)
+                     socket.emit("joinRoom",{roomId,userState,currentUserRoom})
+                     copyRooms[index].MemberCount +=1
+                     setRooms(copyRooms)
                      setisUserInRoom(true)
                      setCurrentUserRoom(roomId)
+
+                 }else{
+                    
                  }
              })
              
          }
         
+    }
+
+    const SignOutHandler=()=>{
+        localStorage.removeItem("userId")
+        navigate("/")
+        setCurrentUserRoom(0)
+        setisUserInRoom(false)
+        setUserState({
+            user_name:"",
+            profile_url:"",
+            id:"",
+            roomId:null
+        })
+
     }
     
     return(
@@ -67,12 +107,23 @@ export default function LeftSide(){
                 <div onClick={()=>setIsWindowActive(false)} className={styles.blackCover}></div>
                 <CreateRoomWindow addNewOne={addNewOne}></CreateRoomWindow>
             </div>
-           <div onClick={()=>setIsWindowActive(true)} style={{marginTop:"20px",width:"25px",height:"25px",backgroundColor:"lightgrey",borderRadius:"50%",display:"flex",justifyContent:"center",alignItems:"center",marginLeft:"auto",marginRight:"20px",cursor:"pointer"}}><AddIcon style={{color:"white"}}></AddIcon></div>
+           <div style={{paddingLeft:"20px",display:"flex",alignItems:"center"}}>
+                <div className={styles.profilePhoto}>
+                    <img style={{width:"100%",height:"100%",borderRadius:"50%",objectFit:"cover"}} src={userState.profile_url === "" ? "/user.jpg" : userState.profile_url} alt="" />    
+                </div>
+                <div style={{paddingLeft:"20px"}}>
+                    <span>{userState.user_name}</span>
+                </div>
+                <div style={{paddingLeft:"20px"}}>
+                    <Button onClick={SignOutHandler} style={{backgroundColor:"#d7263d"}} size="small" variant="contained">Sign Out</Button>
+                </div>
+                <div onClick={()=>setIsWindowActive(true)} style={{width:"25px",height:"25px",backgroundColor:"lightgrey",borderRadius:"50%",display:"flex",marginLeft:"auto",justifyContent:"center",alignItems:"center",marginRight:"20px",cursor:"pointer"}}><AddIcon style={{color:"white"}}></AddIcon></div>
+           </div>
            <div className={styles.group_holder}>
                {rooms.map((item,index)=>(
-                   <div onClick={()=>joinRoomHandler(item.id)}  key={index} className={currentUserRoom !== item.id ? styles.group_child : `${styles.group_child} ${styles.selected}`}>
+                   <div onClick={()=>joinRoomHandler(item.id,index)}  key={index} className={currentUserRoom !== item.id ? styles.group_child : `${styles.group_child} ${styles.selected}`}>
                         <div>{item.room_name}</div>
-                        <div>(1/{item.room_limit})</div>
+                        <div>({item.MemberCount}/{item.room_limit})</div>
                     </div>
                ))}
            </div>

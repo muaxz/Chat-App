@@ -12,6 +12,7 @@ const TypeDefs = gql`
         id:String!
         user_name:String!
         profile_url:String!
+        roomId:Int
     }
     
     type Message { 
@@ -25,6 +26,7 @@ const TypeDefs = gql`
         id:Int!
         room_name:String!
         room_limit:Int! 
+        MemberCount:Int!
         messages:[Message!]!
         users:[User!]!
     }

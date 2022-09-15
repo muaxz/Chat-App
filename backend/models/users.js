@@ -15,6 +15,9 @@ const User = sequelize.define("user",{
     },
     user_name:{
         type:SequelizeType.STRING
+    },
+    roomId:{
+        type:SequelizeType.INTEGER
     }
 })
 
