@@ -137,6 +137,8 @@ const Resolver = {
                     room_limit:args.roomLimit,
                 })
 
+                context.socket.emit("newRoom",Room.toJSON())
+
                 return Room
 
             } catch (error) {

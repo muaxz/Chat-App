@@ -15,7 +15,7 @@ export default function LeftSide(){
     const {data,loading,error} = useQuery(GetAllRooms)
     const {setisUserInRoom,setCurrentUserRoom,currentUserRoom,userState,socket,setUserState} = useContext(UserContext)
     const navigate = useNavigate()
-    const listRef = useRef<{room_name:string,room_limit:number,id:number,MemberCount:number}[]>([])
+    const roomListRef = useRef<{room_name:string,room_limit:number,id:number,MemberCount:number}[]>([])
     const [joinRoom,{data:joinData,loading:joinLoading,error:joinError}] = useMutation(JoinRoom)
     const [rooms,setRooms] = useState<{room_name:string,room_limit:number,id:number,MemberCount:number}[]>([])
     const [isWindowActive,setIsWindowActive] = useState<boolean>(false)
@@ -28,13 +28,23 @@ export default function LeftSide(){
 
         if(data){
             setRooms(data.getRooms)
-            listRef.current = data.getRooms
+            roomListRef.current = data.getRooms
         }
 
     },[data])
 
+
     useEffect(()=>{
-        const copyRooms = listRef.current
+
+        socket.on("newRoom",(roomObject:any)=>{
+            roomListRef.current = [...roomListRef.current,{...roomObject,MemberCount:0}]
+            setRooms(roomListRef.current)
+        })
+
+    },[])
+
+    useEffect(()=>{
+        const copyRooms = roomListRef.current
         if(data){
             socket.on("roomNumberUp",(roomId:number)=>{
                 const roomIndex = copyRooms.findIndex((item)=>item.id === roomId)
@@ -52,7 +62,6 @@ export default function LeftSide(){
 
     const addNewOne=(roomObject:any)=>{
         setIsWindowActive(false)
-        setRooms(prev=>([...prev,roomObject.createRoom]))
     }
     
     const joinRoomHandler=(roomId:number,index:number)=>{
@@ -65,7 +74,7 @@ export default function LeftSide(){
                     userId:userState.id
                 }
              }).then((res)=>{
-                 console.log(res.data.joinRoom.state)
+                 
                  if(res.data.joinRoom.state !== "full"){
                      //navigate(`/chat?roomId=${roomId}`)
                      if(currentUserRoom !== 0){

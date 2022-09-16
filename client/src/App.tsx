@@ -18,9 +18,11 @@ const errorLink = onError(({graphQLErrors,networkError})=>{
   }
 })
 
+const productionUrl = "https://chat-app-ts-rjs.herokuapp.com/graphql"
+const localUrl = "http://localhost:3001/graphql"
 const link = from([
 errorLink,
-new HttpLink({uri:"https://chat-app-ts-rjs.herokuapp.com/graphql"})
+new HttpLink({uri:productionUrl})
 ])
 
 const defaultOptions : DefaultOptions= {

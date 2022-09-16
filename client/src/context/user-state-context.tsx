@@ -10,7 +10,10 @@ interface Props{
     children:JSX.Element
 }
 
-const socket = io("https://chat-app-ts-rjs.herokuapp.com")
+const productionUrl = "https://chat-app-ts-rjs.herokuapp.com"
+const localUrl = "http://localhost:3001"
+
+const socket = io(productionUrl)
 
 export default function UserLoginContext(props:Props){
 
