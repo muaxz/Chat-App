@@ -9,7 +9,6 @@ import {onError} from "@apollo/client/link/error"
 import LoginPage from "./pages/login"
 import ChatPage from "./pages/chat"
 import UserStateProvider from "./context/user-state-context"
-
 import "./app.css"
 //file
 
@@ -42,11 +41,6 @@ defaultOptions:defaultOptions
 })
 
 function App() {
-
-  useEffect(()=>{
-      
-  },[])
-
 
   return (
     <BrowserRouter>
