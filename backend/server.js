@@ -8,10 +8,10 @@ const typeDefs = require("./Schema/typeDefs")
 const resolvers = require("./Schema/resolvers")
 const cors = require("cors")
 const app = express()
+const path = require("path")
 const http = require("http").Server(app)
 const io = require("socket.io")(http,{cors:{origin:"http://localhost:3000"}})
-const port = 3001
-
+const port = process.env.PORT || 3001 
 
 app.use(cors({origin:"http://localhost:3000"}))
 
@@ -51,8 +51,6 @@ io.on("connection",(socket)=>{
       socket.leave(currentUserRoom.toString())
       UserModel.update({roomId:null},{where:{id:userId}})
     })
-
-
 })
 
 async function startApolloServer(){
@@ -68,8 +66,11 @@ startApolloServer()
 
 DB.sync().then(()=>console.log("added to db"))
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
+app.use(express.static("public"))
+
+app.get("*",(req,res,next)=>{
+  res.sendFile(path.resolve(__dirname,"../public","index.html"))
+  //res.sendFile(path.resolve(__dirname,"public","index.html"))
 })
 
 http.listen(port, () => {
