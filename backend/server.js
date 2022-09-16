@@ -69,7 +69,7 @@ DB.sync().then(()=>console.log("added to db"))
 app.use(express.static("public"))
 
 app.get("*",(req,res,next)=>{
-  res.sendFile(path.resolve(__dirname,"../public","index.html"))
+  res.sendFile(path.resolve(__dirname,"../public/build","index.html"))
   //res.sendFile(path.resolve(__dirname,"public","index.html"))
 })
 

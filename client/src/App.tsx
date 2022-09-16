@@ -21,7 +21,7 @@ const errorLink = onError(({graphQLErrors,networkError})=>{
 
 const link = from([
 errorLink,
-new HttpLink({uri:"http://localhost:3001/graphql"})
+new HttpLink({uri:"https://chat-app-ts-rjs.herokuapp.com/graphql"})
 ])
 
 const defaultOptions : DefaultOptions= {
@@ -41,16 +41,13 @@ link: link,
 defaultOptions:defaultOptions
 })
 
-
-
 function App() {
 
   useEffect(()=>{
       
   },[])
 
- 
-  
+
   return (
     <BrowserRouter>
       <ApolloProvider client={client}>
