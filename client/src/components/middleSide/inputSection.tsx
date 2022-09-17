@@ -9,14 +9,14 @@ import {UserContext} from "../../context/user-state-context"
 
 
 interface Props{
-    setMessages:React.Dispatch<React.SetStateAction<any[]>>
+    setMessages:any
 }
 
 export default function InputSection (props:Props){
 
     const [message,setMessage] = useState<string>("")
     const [searchParams,setSearchParams] = useSearchParams()
-    const {currentUserRoom,userState:{id}} = useContext(UserContext)
+    const {currentUserRoom,userState} = useContext(UserContext)
     const [createMessage,{data,loading,error}] = useMutation<any,{roomId:number,message:string,userId:string}>(CreateMessage)
     const UserId = localStorage.getItem("userId")!
 
@@ -24,26 +24,31 @@ export default function InputSection (props:Props){
         console.log(error)
     }
 
-    const SubmitMessage = async ()=>{
+    const SubmitMessage = async (e:{which:number})=>{
 
-        setMessage("")
+        if(e.which === 13 || e.which === 1300){
+            
+            setMessage("")
 
-        if(message === "") return;
+            props.setMessages((prev:any)=>([...prev,{message:message,user:userState}]))
 
-        createMessage({
-            variables:{
-                roomId:currentUserRoom,
-                message:message,
-                userId:id,
-            }
-        })
-
+            if(message === "") return;
+    
+            createMessage({
+                variables:{
+                    roomId:currentUserRoom,
+                    message:message,
+                    userId:userState.id,
+                }
+            })
+        }
     }
+
 
     return(
         <div className={styles.inputsection}>
             <div className={styles.inputholder}>
-                <TextField value={message} onChange={(e)=>setMessage(e.target.value)} fullWidth InputProps={{endAdornment:<InputAdornment position="end"><Button onClick={SubmitMessage} endIcon={<SendIcon></SendIcon>}></Button></InputAdornment>}} variant="outlined" label="write a message..."></TextField>
+                <TextField onKeyDown={SubmitMessage} value={message} onChange={(e)=>setMessage(e.target.value)} fullWidth InputProps={{endAdornment:<InputAdornment position="end"><Button onClick={()=>SubmitMessage({which:1300})} endIcon={<SendIcon></SendIcon>}></Button></InputAdornment>}} variant="outlined" label="write a message..."></TextField>
             </div>
         </div>
     )

@@ -1,4 +1,4 @@
-import React, { useEffect, useState , useContext} from 'react';
+import React, { useEffect, useState , useContext, useRef} from 'react';
 import LeftSide from '../components/leftSide/leftSide';
 import MiddleSide from '../components/middleSide/middleSide';
 import RightSide from '../components/rightSide/rightSide';
@@ -13,10 +13,13 @@ import {UserContext} from "../context/user-state-context"
 export default function ChatPage (){
     const {isUserInRoom,currentUserRoom,socket,userState} = useContext(UserContext)
     const [getParam,setParam] = useSearchParams()
+    const currentUserId = useRef()
     const roomId = getParam.get("roomId")
     const [getRoomMessages,{data,loading,error}] = useLazyQuery(GetRoomMessages)
     const [Messages,setMessages] = useState<any[]>([])
     
+    currentUserId.current = userState.id
+
     useEffect(()=>{
 
         if(data){
@@ -40,7 +43,10 @@ export default function ChatPage (){
     useEffect(()=>{
 
         socket.on("newMessage",(message:any)=>{
-            setMessages(prev=>([...prev,message.message]))
+           
+            if(message.userId !== currentUserId.current){
+                setMessages(prev=>([...prev,message]))
+            }
         })
 
     },[])

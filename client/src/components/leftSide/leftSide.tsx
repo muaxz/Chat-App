@@ -116,7 +116,14 @@ export default function LeftSide(){
                 <div onClick={()=>setIsWindowActive(false)} className={styles.blackCover}></div>
                 <CreateRoomWindow addNewOne={addNewOne}></CreateRoomWindow>
             </div>
-           <div style={{paddingLeft:"20px",display:"flex",alignItems:"center"}}>
+            {
+                joinLoading && 
+                ( <div className={styles.loadingPanel}>
+                    <div className={styles.blackCover}></div>
+                    <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
+                </div>) 
+            }
+           <div style={{paddingLeft:"20px",display:"flex",alignItems:"center",paddingTop:"20px"}}>
                 <div className={styles.profilePhoto}>
                     <img style={{width:"100%",height:"100%",borderRadius:"50%",objectFit:"cover"}} src={userState.profile_url === "" ? "/user.jpg" : userState.profile_url} alt="" />    
                 </div>

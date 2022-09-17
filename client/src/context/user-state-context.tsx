@@ -3,6 +3,8 @@ import {useQuery} from "@apollo/client"
 import {GetCurrentUser} from "../GraphQL/queries"
 import {io} from "socket.io-client"
 import {useNavigate} from "react-router-dom"
+import dotenv from "dotenv"
+
 
 export const UserContext = createContext<any>("")
 
@@ -13,10 +15,9 @@ interface Props{
 const productionUrl = "https://chat-app-ts-rjs.herokuapp.com"
 const localUrl = "http://localhost:3001"
 
-const socket = io(productionUrl)
+const socket = io(process.env.NODE_ENV === "development" ? localUrl : productionUrl)
 
 export default function UserLoginContext(props:Props){
-
     const {data,loading,error,refetch} = useQuery<any,{userId:string}>(GetCurrentUser,{variables:{userId:localStorage.getItem("userId")!}})
     const [isLoggedIn,setIsLoggedIn] = useState<boolean>(false)
     const [userState,setUserState] = useState<{user_name:string,profile_url:string,id:string,roomId:number | null}>({

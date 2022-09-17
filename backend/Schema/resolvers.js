@@ -117,7 +117,7 @@ const Resolver = {
                 const realMessage = newMessage.toJSON()
                 realMessage.user = user;
 
-                context.socket.to(args.roomId.toString()).emit("newMessage",{message:realMessage})
+                context.socket.to(args.roomId.toString()).emit("newMessage",realMessage)
 
 
                 return {state:"success"}

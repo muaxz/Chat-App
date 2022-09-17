@@ -24,6 +24,7 @@
 .inputholder{
     margin: auto;
     max-width: 500px;
+    width: 80%;
 }
 
 .chatholder{
@@ -46,9 +47,10 @@
 
 .chat_box{
  position: relative;
- max-width: 200px;
  padding: 10px;
- width: 100%;
+ background-color: #e1e5f2;
+ border-radius: 7px;
+ word-break:break-word;
 }
 
 .chat_box::after{
@@ -67,7 +69,7 @@
 }
 
 .chat_box_right::after{
-  right:6px;
+  right:-3px;
   top: 7px;
 }
 

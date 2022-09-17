@@ -33,9 +33,9 @@ export default function MiddleSide(props:Props){
                             <div className={`${item.user.id === id ? styles.profilePhotoRight : styles.profilePhotoLeft} ${styles.profilePhoto}`}>
                                 <img  style={{width:"100%",objectFit:"cover",height:"100%",borderRadius:"50%"}} src={item.user.profile_url === "" ? "/user.jpg" : item.user.profile_url} alt="" />
                             </div>
-                            <span className={styles.textPart}>
-                                {item.message}
-                            </span>
+                            <p>
+                              {item.message}
+                            </p>
                         </div>
                     </div>
                 ))}

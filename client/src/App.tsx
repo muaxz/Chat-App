@@ -10,6 +10,7 @@ import LoginPage from "./pages/login"
 import ChatPage from "./pages/chat"
 import UserStateProvider from "./context/user-state-context"
 import "./app.css"
+import doteinv from "dotenv"
 //file
 
 const errorLink = onError(({graphQLErrors,networkError})=>{
@@ -22,7 +23,7 @@ const productionUrl = "https://chat-app-ts-rjs.herokuapp.com/graphql"
 const localUrl = "http://localhost:3001/graphql"
 const link = from([
 errorLink,
-new HttpLink({uri:productionUrl})
+new HttpLink({uri:process.env.NODE_ENV === "development" ? localUrl : productionUrl})
 ])
 
 const defaultOptions : DefaultOptions= {
