@@ -25,7 +25,7 @@ export default function RightSide(props:Props){
 
         socket.on("outMember",({userId,roomId}:{userId:string,roomId:number})=>{
                 //console.log(memberListRef.current)
-                console.log("in out")
+              
                 const outUserIndex = memberListRef.current.findIndex((item)=>item.id === userId)
                 memberListRef.current.splice(outUserIndex,1)
                 setMemberList([...memberListRef.current])
