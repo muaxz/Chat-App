@@ -26,7 +26,7 @@ export default function LoginPage(){
 
     async function SubmitLogin(){
 
-        if(nameValue.name === ""){
+        if(nameValue.name.trim() === ""){
             return setNameValue(prev=>({...prev,error:true}))
         }
     

@@ -32,7 +32,7 @@ export default function InputSection (props:Props){
 
             props.setMessages((prev:any)=>([...prev,{message:message,user:userState}]))
 
-            if(message === "") return;
+            if(message.trim() === "") return;
     
             createMessage({
                 variables:{

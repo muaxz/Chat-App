@@ -96,7 +96,6 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    border: 1px solid lightblue;
 }
 
 .profilePhotoRight{
@@ -108,4 +107,20 @@
     left: -60px;
 }
 
+.userNameDiv{
+  position: absolute;
+  font-size: 13px;
+  top: -18px;
+  width: 100px;
+  margin-bottom: 10px;
+  color: lightseagreen;
+}
+
+.userNameDivright{
+  right: -20px;
+}
+
+.userNameDivleft{
+  left: 50px;
+}
 
