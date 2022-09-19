@@ -26,11 +26,12 @@ export default function InputSection (props:Props){
 
     const SubmitMessage = async (e:{which:number})=>{
 
+        if(message.trim() === "") return;
+
+
         if(e.which === 13 || e.which === 1300){
             
             setMessage("")
-
-            if(message.trim() === "") return;
 
             props.setMessages((prev:any)=>([...prev,{message:message,user:userState}]))
     

@@ -36,11 +36,24 @@ const Resolver = {
                         model:MessageModel,
                         include:{
                             model:UserModel
-                        }
+                        },
+                        separate:true,
+                        order:[["createdAt","ASC"]]
+                        
                     },{
-                        model:UserModel
+                        model:UserModel,
                     }],
                 })
+                /*
+                const trialMessages = await MessageModel.findAll({
+                    include:{
+                        model:UserModel
+                    },
+                    order:[["createdAt","ASC"]]
+                })
+                */
+
+                console.log(Messages.toJSON())
 
                 
                 return Messages.toJSON();
