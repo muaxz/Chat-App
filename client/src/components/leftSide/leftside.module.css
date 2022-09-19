@@ -1,8 +1,13 @@
 .outerdiv{
     flex: 1;
     border-right: 1px solid lightgray; 
-    width: 200px;
     height: 100vh;
+}
+
+@media screen and (max-width: 900px) {
+    .outerdiv {
+        height: auto;
+    }
 }
 
 
