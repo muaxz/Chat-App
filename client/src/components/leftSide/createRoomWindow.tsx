@@ -31,7 +31,9 @@ export default function CreateRoomWindow (props:Props){
     }
 
     const CreateRoomFunction = async ()=>{
-        
+
+       if(roomValues.roomName.trim() === "") return;
+
        const newRoom = await createRoom({
             variables:{
                 roomName:roomValues.roomName,
@@ -47,9 +49,9 @@ export default function CreateRoomWindow (props:Props){
 
         <div className={styles.window_outer}>
             <div className={styles.window_inner}>
-                <TextField onChange={(e)=>inputHandler(e,"roomName")} variant="filled" fullWidth style={{paddingBottom:"20px"}} label="Entere a room name..."></TextField>
+                <TextField onChange={(e)=>inputHandler(e,"roomName")} variant="filled" fullWidth style={{paddingBottom:"20px"}} label="Enter a room name..."></TextField>
                 <FormControl variant="filled" style={{paddingBottom:"40px"}} fullWidth>
-                        <InputLabel id="demo-simple-select-label">Choose A Member Limit</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Determine a limit for members</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
