@@ -23,6 +23,10 @@ io.on("connection",(socket)=>{
        socket.join(roomId.toString())
     })
     
+    socket.on("oneWriting",({memberName,currentUserRoom})=>{
+        socket.to(currentUserRoom.toString()).emit("oneWriting",memberName)
+    })
+
     socket.on("joinRoom",({userState,roomId,currentUserRoom})=>{
         
      

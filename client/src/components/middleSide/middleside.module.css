@@ -16,6 +16,7 @@
 }
 
 .inputsection{
+    position: relative;
     padding-top: 50px;
     padding-bottom: 50px;
 }
@@ -122,4 +123,25 @@
 .userNameDivleft{
   left: 55px;
 }
+
+
+
+.writer_sign{
+  position: absolute;
+  background-color: rgba(224, 174, 174, 0.712);
+  padding: 5px;
+  color: white;
+  border-radius: 25px;
+  font-size: 13px;
+  top: 30px;
+  left: 10%;
+  opacity:0;
+  transition-duration: 300ms;
+}
+
+.writer_sign.active{
+  top:10px;
+  opacity:1;
+}
+
 

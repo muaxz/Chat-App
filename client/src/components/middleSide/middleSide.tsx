@@ -6,7 +6,8 @@ import {UserContext} from "../../context/user-state-context"
 
 interface Props{
     messageList:Array<any>,
-    setMessages:React.Dispatch<React.SetStateAction<any[]>>
+    setMessages:React.Dispatch<React.SetStateAction<any[]>>,
+    currentWriter:string
 }
 
 export default function MiddleSide(props:Props){
@@ -42,7 +43,7 @@ export default function MiddleSide(props:Props){
                     </div>
                 ))}
             </div>
-            <InputSection setMessages={props.setMessages}></InputSection>
+            <InputSection currentWriter={props.currentWriter} setMessages={props.setMessages}></InputSection>
         </div>
 
     )

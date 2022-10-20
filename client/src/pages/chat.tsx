@@ -17,6 +17,9 @@ export default function ChatPage (){
     const roomId = getParam.get("roomId")
     const [getRoomMessages,{data,loading,error}] = useLazyQuery(GetRoomMessages)
     const [Messages,setMessages] = useState<any[]>([])
+    const [currentWriterName,setCurrentWriterName] = useState<string>("")
+    const isWriterAbsent = useRef(true);
+    const timeOut = useRef<any>(null);
     
     currentUserId.current = userState.id
 
@@ -27,6 +30,22 @@ export default function ChatPage (){
         }
 
     },[data])
+
+    const writerSignHandler=()=>{
+        clearTimeout(timeOut.current)
+        timeOut.current = setTimeout(() => {
+            setCurrentWriterName("")
+        }, 3000);
+    }
+    
+    useEffect(()=>{
+
+        socket.on("oneWriting",(memberName:string)=>{
+             writerSignHandler()
+             setCurrentWriterName(memberName)
+        })
+
+    },[])
 
     useEffect(()=>{
     
@@ -63,7 +82,7 @@ export default function ChatPage (){
                 {   
                     isUserInRoom ?
                     (<React.Fragment>
-                        <MiddleSide setMessages={setMessages} messageList={Messages}></MiddleSide>
+                        <MiddleSide currentWriter={currentWriterName} setMessages={setMessages} messageList={Messages}></MiddleSide>
                         <RightSide  memberList={data ? data.getRoomMessages.users : []}></RightSide>
                     </React.Fragment>)
 

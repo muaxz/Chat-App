@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from "./middleside.module.css"
 import SendIcon from "@mui/icons-material/Send"
 import {TextField,InputAdornment,Button} from "@mui/material"
@@ -9,20 +9,24 @@ import {UserContext} from "../../context/user-state-context"
 
 
 interface Props{
-    setMessages:any
+    setMessages:any,
+    currentWriter:string
 }
 
 export default function InputSection (props:Props){
 
     const [message,setMessage] = useState<string>("")
     const [searchParams,setSearchParams] = useSearchParams()
-    const {currentUserRoom,userState} = useContext(UserContext)
+    const {currentUserRoom,userState,socket} = useContext(UserContext)
     const [createMessage,{data,loading,error}] = useMutation<any,{roomId:number,message:string,userId:string}>(CreateMessage)
     const UserId = localStorage.getItem("userId")!
+    const inputController = useRef<boolean>(true)
+
 
     if(error){
         console.log(error)
     }
+
 
     const SubmitMessage = async (e:{which:number})=>{
 
@@ -45,11 +49,19 @@ export default function InputSection (props:Props){
         }
     }
 
+    const ChangeHandler=(e:any)=>{
+        
+        setMessage(e.target.value)
+        socket.emit("oneWriting",{memberName:userState.user_name,currentUserRoom:currentUserRoom})
+    }
 
     return(
         <div className={styles.inputsection}>
             <div className={styles.inputholder}>
-                <TextField onKeyDown={SubmitMessage} value={message} onChange={(e)=>setMessage(e.target.value)} fullWidth InputProps={{endAdornment:<InputAdornment position="end"><Button onClick={()=>SubmitMessage({which:1300})} endIcon={<SendIcon></SendIcon>}></Button></InputAdornment>}} variant="outlined" label="write a message..."></TextField>
+                <div className={`${styles.writer_sign} ${props.currentWriter.length ? styles.active : ""}`}>
+                    {props.currentWriter+"     " || "Micheal"} . . .
+                </div>
+                <TextField onKeyDown={SubmitMessage} value={message} onChange={ChangeHandler} fullWidth InputProps={{endAdornment:<InputAdornment position="end"><Button onClick={()=>SubmitMessage({which:1300})} endIcon={<SendIcon></SendIcon>}></Button></InputAdornment>}} variant="outlined" label="write a message..."></TextField>
             </div>
         </div>
     )
